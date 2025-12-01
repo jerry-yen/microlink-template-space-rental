@@ -110,15 +110,7 @@
       <h1 class="text-center mb-4" style="color: var(--primary-color);">關於我們</h1>
       <div class="row justify-content-center">
         <div class="col-md-8">
-          <p class="lead">
-            思辨空間致力於提供多元、彈性且便利的租借空間，讓每一位用戶都能輕鬆找到最適合的會議、活動或工作場所。我們相信，空間不只是場地，更是創意與合作的起點。
-          </p>
-          <p>
-            無論您是自由工作者、創業團隊，還是需要臨時會議場所的企業，我們的平台皆提供友善的搜尋與預約流程，搭配透明的價格、真實的評價與高品質的服務。
-          </p>
-          <p>
-            感謝您選擇我們，未來我們也將持續優化平台體驗，讓找空間變得更簡單、更有效率！
-          </p>
+          <?php echo nl2br($about->content); ?>
         </div>
       </div>
       <div class="row mt-5">
