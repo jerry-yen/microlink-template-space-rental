@@ -134,33 +134,12 @@
                 <div class="mb-5">
                     <h4 class="mb-3">使用規範</h4>
                     <div class="row">
+                        <?php foreach($rentals->data as $rental): ?>
                         <div class="col-md-6">
-                            <h6>時間</h6>
-                            <ul class="rule-list text-muted">
-                                <li>租借時段依預約為準，請準時到場並於結束前整理離場。</li>
-                                <li>最小預約時段為 1 小時；若需延長，請至少於結束前 30 分鐘向館方提出申請。</li>
-                                <li>若逾時離場，館方有權依時段收費或扣除押金。</li>
-                            </ul>
+                            <h6><?php echo $rental->title; ?></h6>
+                            <?php echo $rental->content; ?>
                         </div>
-                        <div class="col-md-6">
-                            <h6>保管</h6>
-                            <ul class="rule-list text-muted">
-                                <li>請妥善保管個人物品，館方不負保管責任。</li>
-                                <li>如需寄放物品或道具，請事先說明並經館方同意。</li>
-                                <li>若造成設備或場地損壞，承租人需負賠償責任。</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <h6>注意事項</h6>
-                        <ul class="rule-list text-muted">
-                            <li>場地僅供預約者使用，不得轉租或用於違法用途。</li>
-                            <li>場內禁止吸菸、嚴禁明火與任意懸掛設備。</li>
-                            <li>若有飲食需求，請於申請時告知並依館方規定處理垃圾與回收。</li>
-                            <li>活動期間請尊重其他使用者，維持場地安靜與整潔。</li>
-                            <li>館方保留最終審核與調整預約之權利。</li>
-                        </ul>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 
