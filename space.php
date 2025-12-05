@@ -8,6 +8,7 @@
   <title>創意工作坊A廳 | 思辨空間</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
   <style>
     :root {
       --primary-color: #5567dd;
@@ -239,9 +240,7 @@
       <!-- 行事曆區塊 -->
       <div class="calendar-container mb-5">
         <h5 class="mb-3">空間使用行事曆</h5>
-        <iframe
-          src="https://calendar.google.com/calendar/embed?src=your-calendar-id%40group.calendar.google.com&ctz=Asia%2FTaipei"
-          style="border: 0" frameborder="0" scrolling="no"></iframe>
+            <div id="calendar"></div>
         <p class="text-muted mt-2">以上行事曆顯示此空間的預約狀況，點選事件可查看詳細資訊。</p>
       </div>
 
@@ -261,6 +260,99 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales-all.global.min.js"></script>
+  <style>
+    /* FullCalendar container styling */
+    #calendar {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+  </style>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      locale: 'zh-tw',
+      initialView: 'dayGridMonth',
+      height: 600,
+      // 將右側的檢視按鈕移除，只保留上一頁/下一頁/今天與標題
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: ''
+      },
+      // 明確指定 Today 的中文顯示（確保即使 locale 資源未載入也會中文化）
+      buttonText: {
+        today: '今天'
+      },
+      selectable: true,
+      selectMirror: true,
+      navLinks: true,
+      events: [], // will load from API
+      // 點擊某一天（空白日期）時導向申請頁面，帶入日期與空間 id
+      dateClick: function(info) {
+        var dateStr = info.dateStr || (info.date ? info.date.toISOString().slice(0,10) : '');
+        var appUrl = '<?php echo $domain_url; ?>/application.html?date=' + encodeURIComponent(dateStr) + '&space_id=<?php echo $space->id; ?>';
+        window.location.href = appUrl;
+      },
+      eventClick: function(info) {
+        info.jsEvent.preventDefault();
+        var startIso = info.event.start ? info.event.start.toISOString() : '';
+        var bookingUrl = '/booking.php?space_id=<?php echo $space->id; ?>&start=' + encodeURIComponent(startIso) + '&event_id=' + encodeURIComponent(info.event.id || '');
+        // 如果想改為 modal，可在此改成顯示 modal
+        window.location.href = bookingUrl;
+      }
+    });
+
+    calendar.render();
+
+    // ---- 範例：產生一些最近日期的隨機承租事件（示範用途，不會寫入後端）
+    (function(){
+      function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
+      var titles = ['示範：社團活動','示範：場地租借','示範：會議','示範：講座','示範：工作坊','示範：攝影場次'];
+      var sampleEvents = [];
+      var today = new Date();
+      // 產生 6 個範例事件，日期分布在最近兩週內（含過去與接近未來）
+      for(var i=0;i<6;i++){
+        var offset = randInt(-13, 2); // -13 天 ~ +2 天
+        var start = new Date(today);
+        start.setDate(start.getDate() + offset);
+        // 亂數起始時段：08~18 小時內
+        var startHour = randInt(8, 17);
+        start.setHours(startHour, 0, 0, 0);
+        var end = new Date(start);
+        end.setHours(start.getHours() + randInt(1, 3)); // 1~3 小時
+
+        sampleEvents.push({
+          id: 'sample-' + i,
+          title: titles[i % titles.length],
+          start: start.toISOString(),
+          end: end.toISOString(),
+          allDay: false,
+          backgroundColor: '#ffbc42',
+          borderColor: '#ff9f1a'
+        });
+      }
+
+      // 加入到 calendar（示範事件先加入，之後 API 事件會再加入）
+      calendar.addEventSource(sampleEvents);
+    })();
+
+    var eventsApiUrl = '/api/space_events.php?space_id=<?php echo $space->id; ?>';
+    fetch(eventsApiUrl)
+      .then(function(res){ return res.json(); })
+      .then(function(data){
+        calendar.addEventSource(data);
+      })
+      .catch(function(err){
+        console.error('載入事件失敗', err);
+      });
+  });
+  </script>
   <!-- 固定社群按鈕（FB / IG / 官方 LINE） -->
   <div class="social-fixed" aria-hidden="false">
     <a class="social-fb" href="#" aria-label="Facebook - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
