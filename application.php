@@ -101,7 +101,7 @@
 
                 <div class="col-md-6">
                   <label class="form-label">5. 租借人姓名 <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" name="applicant_name" required placeholder="請填寫聯絡人姓名">
+                  <input type="text" class="form-control" name="title" required placeholder="請填寫聯絡人姓名">
                   <div class="invalid-feedback">請填寫租借人姓名。</div>
                 </div>
 
@@ -147,28 +147,31 @@
                   <div class="row g-3 p-z3">
 
                     <div class="col-12" id="q11_group_a">
-                      <label class="form-label">11. 租借時間（多功能教室、會議室、團體室）</label>
+                      <label class="form-label">11. 租借時間（多功能教室、會議室、團體室）<span class="text-danger">*</span></label>
                       <div class="form-check">
-                        <input class="form-check-input conversation-field" type="checkbox" name="rental_time[]"
+                        <input class="form-check-input conversation-field" type="checkbox" name="rental_time_slots[]"
                           value="上午 08:30-12:30" id="time_morning">
                         <label class="form-check-label" for="time_morning">上午 08:30-12:30</label>
                       </div>
                       <div class="form-check">
-                        <input class="form-check-input conversation-field" type="checkbox" name="rental_time[]"
+                        <input class="form-check-input conversation-field" type="checkbox" name="rental_time_slots[]"
                           value="下午 13:00-17:00" id="time_afternoon">
                         <label class="form-check-label" for="time_afternoon">下午 13:00-17:00</label>
                       </div>
                       <div class="form-check">
-                        <input class="form-check-input conversation-field" type="checkbox" name="rental_time[]"
+                        <input class="form-check-input conversation-field" type="checkbox" name="rental_time_slots[]"
                           value="晚上 17:30-21:30" id="time_evening">
                         <label class="form-check-label" for="time_evening">晚上 17:30-21:30</label>
                       </div>
+                      <div class="invalid-feedback">請至少選擇一個租借時段。</div>
                     </div>
 
                     <div class="col-12" id="q11_group_b" style="display: none;">
-                      <label class="form-label">11. 租借時數，請以小時為單位 （9:00-12:00，共3小時）</label>
-                      <input type="text" class="form-control conversation-field" name="rental_hours"
+                      <label class="form-label">11. 租借時數，請以小時為單位 （9:00-12:00，共3小時）<span
+                          class="text-danger">*</span></label>
+                      <input type="text" class="form-control conversation-field" name="rental_duration"
                         placeholder="輸入您的答案">
+                      <div class="invalid-feedback">請填寫租借時數。</div>
                     </div>
                   </div>
                 </div>
@@ -303,13 +306,13 @@
                   </div>
                 </div>
 
-                <div class="col-12 text-end">
+                <div class="col-12 text-end mt-4">
                   <button type="submit" class="btn btn-primary">提交申請</button>
                 </div>
               </div>
             </form>
 
-            <div id="submitResult" class="mt-3" style="display:none;"></div>
+            <div id="submitResult" class="alert mt-5" style="display:none;margin-top: 20px;"></div>
 
           </div>
         </div>
@@ -332,8 +335,6 @@
       const conferenceOptions = document.getElementById('conference_options');
       const conferenceFields = document.querySelectorAll('.conversation-field');
 
-
-
       // 監聽空間選擇
       spaceChoice.addEventListener('change', function () {
         const selectedOption = this.options[this.selectedIndex];
@@ -341,6 +342,13 @@
 
         const q11GroupA = document.getElementById('q11_group_a');
         const q11GroupB = document.getElementById('q11_group_b');
+        const inputB = q11GroupB.querySelector('input[name="rental_duration"]');
+        const feedbackA = q11GroupA.querySelector('.invalid-feedback');
+
+        // Reset validation state
+        q11GroupA.querySelectorAll('.form-control, .form-check-input').forEach(el => el.classList.remove('is-invalid'));
+        q11GroupB.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
+        if (feedbackA) feedbackA.style.display = 'none';
 
         if (category === 'large' || category === 'small') {
           conferenceOptions.style.display = 'block';
@@ -349,9 +357,11 @@
             //顯示 Group A 的第11題，隱藏 Group B
             q11GroupA.style.display = 'block';
             q11GroupB.style.display = 'none';
-            // 清除 Group B 的值
-            const inputB = q11GroupB.querySelector('input');
-            if (inputB) inputB.value = '';
+            // 清除 Group B 的值並移除必填
+            if (inputB) {
+              inputB.value = '';
+              inputB.removeAttribute('required');
+            }
           } else if (category === 'small') {
             //顯示 Group B 的第11題，隱藏 Group A
             q11GroupA.style.display = 'none';
@@ -359,22 +369,43 @@
             // 清除 Group A 的值
             const inputsA = q11GroupA.querySelectorAll('input[type="checkbox"]');
             inputsA.forEach(cb => cb.checked = false);
+            // 增加 Group B 必填
+            if (inputB) {
+              inputB.setAttribute('required', '');
+            }
           }
 
         } else {
           conferenceOptions.style.display = 'none';
-          // 清除所有值
+          // 清除所有值並移除驗證
           conferenceFields.forEach(field => {
             if (field.type === 'checkbox' || field.type === 'radio') {
               field.checked = false;
             } else {
               field.value = '';
             }
+            field.classList.remove('is-invalid');
+            if (field.name === 'rental_duration') {
+              field.removeAttribute('required');
+            }
           });
         }
       });
 
-      // URL 參數自動填充 (Moved after event listeners to ensure 'change' event is captured)
+      // 初始化 checkbox 監聽器以在選擇時清除錯誤
+      const q11GroupA = document.getElementById('q11_group_a');
+      const checkBoxesA = q11GroupA.querySelectorAll('input[type="checkbox"]');
+      checkBoxesA.forEach(box => {
+        box.addEventListener('change', function () {
+          const feedbackA = q11GroupA.querySelector('.invalid-feedback');
+          if (q11GroupA.querySelectorAll('input[type="checkbox"]:checked').length > 0) {
+            feedbackA.style.display = 'none';
+            checkBoxesA.forEach(b => b.classList.remove('is-invalid'));
+          }
+        });
+      });
+
+      // URL 參數自動填充
       const urlParams = new URLSearchParams(window.location.search);
       const dateParam = urlParams.get('date');
       const spaceIdParam = urlParams.get('space_id');
@@ -395,18 +426,87 @@
       }
 
       form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
+        let isCustomValid = true;
+
+        // Custom Validation for Checkboxes in Group A (Large Spaces)
+        // 只有當 Group A 顯示時才檢查
+        if (q11GroupA.style.display !== 'none') {
+          const checkedBoxes = q11GroupA.querySelectorAll('input[type="checkbox"]:checked');
+          const feedbackA = q11GroupA.querySelector('.invalid-feedback');
+
+          if (checkedBoxes.length === 0) {
+            isCustomValid = false;
+            // 顯示錯誤
+            if (feedbackA) feedbackA.style.display = 'block';
+            checkBoxesA.forEach(box => box.classList.add('is-invalid'));
+          } else {
+            // 隱藏錯誤
+            if (feedbackA) feedbackA.style.display = 'none';
+            checkBoxesA.forEach(box => box.classList.remove('is-invalid'));
+          }
+        }
+
+        if (!form.checkValidity() || !isCustomValid) {
           event.preventDefault()
           event.stopPropagation()
+
+          // 如果是 Group A 錯誤，捲動到該處
+          if (!isCustomValid && q11GroupA.style.display !== 'none') {
+            q11GroupA.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+
         } else {
-          // 模擬送出結果（實際應該導向後端 API）
+          // 實際送出資料至後端 API
           event.preventDefault()
+          const submitBtn = form.querySelector('button[type="submit"]')
           const result = document.getElementById('submitResult')
-          result.style.display = 'block'
-          result.className = 'alert alert-success'
-          result.innerText = '已收到您的申請，我們會儘快以您提供的聯絡資訊與您確認。'
-          form.reset()
-          form.classList.remove('was-validated')
+
+          // 避免重複送出
+          submitBtn.disabled = true
+          const originalBtnText = submitBtn.innerText
+          submitBtn.innerText = '提交中...'
+
+          const formData = new FormData(form)
+
+          fetch('/api/space/booking?_token_=1234567890', {
+            method: 'POST',
+            body: formData
+          })
+            .then(response => {
+              if (response.ok) {
+                return response.json().catch(() => ({}))
+              }
+              throw new Error('Network response was not ok.')
+            })
+            .then(data => {
+              // 成功
+              result.style.display = 'block'
+              result.className = 'alert alert-success'
+              result.innerText = '已收到您的申請，我們會儘快以您提供的聯絡資訊與您確認。'
+              form.reset()
+              form.classList.remove('was-validated')
+              // 重置 checkbox 相關 UI
+              if (q11GroupA) {
+                const feedbackA = q11GroupA.querySelector('.invalid-feedback');
+                if (feedbackA) feedbackA.style.display = 'none';
+                q11GroupA.querySelectorAll('input[type="checkbox"]').forEach(b => b.classList.remove('is-invalid'));
+              }
+
+              // 捲動至訊息處
+              result.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            })
+            .catch(error => {
+              // 失敗
+              console.error('Error:', error)
+              result.style.display = 'block'
+              result.className = 'alert alert-danger'
+              result.innerText = '申請提交失敗，請檢查網路連線或稍後再試。'
+              result.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            })
+            .finally(() => {
+              submitBtn.disabled = false
+              submitBtn.innerText = originalBtnText
+            })
         }
         form.classList.add('was-validated')
       }, false)

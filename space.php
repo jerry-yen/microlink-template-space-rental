@@ -275,6 +275,40 @@
     document.addEventListener('DOMContentLoaded', function () {
       var calendarEl = document.getElementById('calendar');
 
+      <?php
+      $calendar_events = [];
+      if (isset($applications) && is_object($applications)) {
+        $applications = (array) $applications;
+      }
+      if (isset($applications) && is_array($applications)) {
+        foreach ($applications as $app) {
+          if (!empty($app->rental_date)) {
+            // 依據 events 內容產生事件，若有多筆則分別產生
+            if (isset($app->events) && is_array($app->events) && !empty($app->events)) {
+              foreach ($app->events as $event_title) {
+                $calendar_events[] = [
+                  'title' => $event_title,
+                  'start' => $app->rental_date,
+                  'allDay' => true,
+                  'backgroundColor' => '#ffbc42',
+                  'borderColor' => '#ff9f1a'
+                ];
+              }
+            } else {
+              // 相容舊資料或無 events 時的預設顯示
+              $calendar_events[] = [
+                'title' => '已預約',
+                'start' => $app->rental_date,
+                'allDay' => true,
+                'backgroundColor' => '#ffbc42',
+                'borderColor' => '#ff9f1a'
+              ];
+            }
+          }
+        }
+      }
+      ?>
+
       var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'zh-tw',
         initialView: 'dayGridMonth',
@@ -292,7 +326,7 @@
         selectable: true,
         selectMirror: true,
         navLinks: true,
-        events: [], // will load from API
+        events: <?php echo json_encode($calendar_events); ?>,
         // 點擊某一天（空白日期）時導向申請頁面，帶入日期與空間 id
         dateClick: function (info) {
           var dateStr = info.dateStr || (info.date ? info.date.toISOString().slice(0, 10) : '');
@@ -301,56 +335,11 @@
         },
         eventClick: function (info) {
           info.jsEvent.preventDefault();
-          var startIso = info.event.start ? info.event.start.toISOString() : '';
-          var bookingUrl = '/booking.php?space_id=<?php echo $space->id; ?>&start=' + encodeURIComponent(startIso) + '&event_id=' + encodeURIComponent(info.event.id || '');
-          // 如果想改為 modal，可在此改成顯示 modal
-          window.location.href = bookingUrl;
+          // 這裡可以加入查看詳細資訊的邏輯，目前先保留
         }
       });
 
       calendar.render();
-
-      // ---- 範例：產生一些最近日期的隨機承租事件（示範用途，不會寫入後端）
-      (function () {
-        function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-        var titles = ['示範：社團活動', '示範：場地租借', '示範：會議', '示範：講座', '示範：工作坊', '示範：攝影場次'];
-        var sampleEvents = [];
-        var today = new Date();
-        // 產生 6 個範例事件，日期分布在最近兩週內（含過去與接近未來）
-        for (var i = 0; i < 6; i++) {
-          var offset = randInt(-13, 2); // -13 天 ~ +2 天
-          var start = new Date(today);
-          start.setDate(start.getDate() + offset);
-          // 亂數起始時段：08~18 小時內
-          var startHour = randInt(8, 17);
-          start.setHours(startHour, 0, 0, 0);
-          var end = new Date(start);
-          end.setHours(start.getHours() + randInt(1, 3)); // 1~3 小時
-
-          sampleEvents.push({
-            id: 'sample-' + i,
-            title: titles[i % titles.length],
-            start: start.toISOString(),
-            end: end.toISOString(),
-            allDay: false,
-            backgroundColor: '#ffbc42',
-            borderColor: '#ff9f1a'
-          });
-        }
-
-        // 加入到 calendar（示範事件先加入，之後 API 事件會再加入）
-        calendar.addEventSource(sampleEvents);
-      })();
-
-      var eventsApiUrl = '/api/space_events.php?space_id=<?php echo $space->id; ?>';
-      fetch(eventsApiUrl)
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-          calendar.addEventSource(data);
-        })
-        .catch(function (err) {
-          console.error('載入事件失敗', err);
-        });
     });
   </script>
   <!-- 固定社群按鈕（FB / IG / 官方 LINE） -->
