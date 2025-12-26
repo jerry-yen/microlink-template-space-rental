@@ -158,16 +158,26 @@
 <style>
   /* 固定為 2 欄瀑布流（手機小於 576px 時為 1 欄） */
   @media (min-width: 576px) {
-    .masonry { column-count: 2; }
+    .masonry {
+      column-count: 2;
+    }
   }
+
   @media (min-width: 992px) {
-    .masonry { column-count: 2; }
+    .masonry {
+      column-count: 2;
+    }
   }
 
   /* ensure embedded maps and media fill the card */
-  .masonry .info-box iframe.map { height: 280px; }
+  .masonry .info-box iframe.map {
+    height: 280px;
+  }
+
   @media (min-width: 992px) {
-    .masonry .info-box iframe.map { height: 320px; }
+    .masonry .info-box iframe.map {
+      height: 320px;
+    }
   }
 </style>
 
@@ -213,15 +223,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- 固定社群按鈕（FB / IG / 官方 LINE） -->
-  <div class="social-fixed" aria-hidden="false">
-    <a class="social-fb" href="#" aria-label="Facebook - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
-        class="fab fa-facebook-f"></i></a>
-    <a class="social-ig" href="#" aria-label="Instagram - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
-        class="fab fa-instagram"></i></a>
-    <a class="social-line" href="#" aria-label="官方 LINE - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
-        class="fab fa-line"></i></a>
-  </div>
+  <?php include dirname(__FILE__) . '/include/third-party-link.php'; ?>
 </body>
 
 </html>

@@ -55,7 +55,7 @@
             background: #fff;
             border-radius: 10px;
             padding: 1rem;
-            box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+            box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
             text-align: center;
         }
 
@@ -69,14 +69,7 @@
         }
     </style>
 </head>
-<style>
-    /* 固定社群按鈕（桌面側邊 / 手機底部） */
-    .social-fixed { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 1050; }
-    .social-fixed a { width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; color: #fff; text-decoration: none; box-shadow: 0 6px 18px rgba(16,24,40,0.12); transition: transform 0.14s ease, box-shadow 0.14s ease; font-size:20px; }
-    .social-fixed a:focus, .social-fixed a:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(16,24,40,0.16); }
-    .social-fb { background:#1877F2; } .social-ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); } .social-line { background:#00C300; }
-    @media (max-width: 767.98px) { .social-fixed { right:0; left:0; bottom:0; top:auto; transform:none; flex-direction:row; justify-content:center; padding:10px 6px; background: rgba(255,255,255,0.92); box-shadow: 0 -6px 18px rgba(16,24,40,0.06); } .social-fixed a { width:44px; height:44px; font-size:18px; } }
-</style>
+
 
 <body class="d-flex flex-column min-vh-100">
     <!-- Navbar -->
@@ -134,19 +127,21 @@
                 <div class="mb-5">
                     <h4 class="mb-3">使用規範</h4>
                     <div class="row">
-                        <?php foreach($rentals->data as $rental): ?>
-                        <div class="col-md-6">
-                            <h6><?php echo $rental->title; ?></h6>
-                            <?php echo $rental->content; ?>
-                        </div>
+                        <?php foreach ($rentals->data as $rental): ?>
+                            <div class="col-md-6">
+                                <h6><?php echo $rental->title; ?></h6>
+                                <?php echo $rental->content; ?>
+                            </div>
                         <?php endforeach; ?>
                     </div>
                 </div>
 
                 <div class="contact-box p-3 bg-white rounded" style="border-left:5px solid var(--primary-color);">
                     <strong>如需申請或有疑問，請與我們聯絡：</strong>
-                    <p class="mb-1"><i class="fas fa-envelope me-2"></i>service@spacehub.com</p>
-                    <p class="mb-0"><i class="fas fa-phone me-2"></i>(02) 1234-5678</p>
+                    <p class="mb-1"><i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars($setting->email); ?>
+                    </p>
+                    <p class="mb-0"><i class="fas fa-phone me-2"></i><?php echo htmlspecialchars($setting->phone); ?>
+                    </p>
                 </div>
 
             </div>
@@ -158,13 +153,9 @@
         <p class="mb-0">&copy; 2025 思辨空間 All rights reserved.</p>
     </footer>
 
+    <?php include dirname(__FILE__) . '/include/third-party-link.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- 固定社群按鈕（FB / IG / 官方 LINE） -->
-    <div class="social-fixed" aria-hidden="false">
-        <a class="social-fb" href="#" aria-label="Facebook - 打開新分頁" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
-        <a class="social-ig" href="#" aria-label="Instagram - 打開新分頁" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-        <a class="social-line" href="#" aria-label="官方 LINE - 打開新分頁" target="_blank" rel="noopener noreferrer"><i class="fab fa-line"></i></a>
-    </div>
 </body>
+
 
 </html>

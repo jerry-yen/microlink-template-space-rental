@@ -393,8 +393,8 @@
             <h2 class="mb-3 text-center">聯絡資訊</h2>
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center">
-                    <p><i class="fas fa-envelope me-2"></i>service@spacehub.com</p>
-                    <p><i class="fas fa-phone me-2"></i>(02) 1234-5678</p>
+                    <p><i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars($setting->email); ?></p>
+                    <p><i class="fas fa-phone me-2"></i><?php echo htmlspecialchars($setting->phone); ?></p>
                 </div>
             </div>
         </div>
@@ -407,14 +407,7 @@
     </footer>
 
     <!-- 固定社群按鈕（FB / IG / 官方 LINE） -->
-    <div class="social-fixed" aria-hidden="false">
-        <a class="social-fb" href="#" aria-label="Facebook - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
-                class="fab fa-facebook-f"></i></a>
-        <a class="social-ig" href="#" aria-label="Instagram - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
-                class="fab fa-instagram"></i></a>
-        <a class="social-line" href="#" aria-label="官方 LINE - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
-                class="fab fa-line"></i></a>
-    </div>
+    <?php include dirname(__FILE__) . '/include/third-party-link.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

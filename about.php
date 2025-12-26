@@ -1,6 +1,7 @@
 <!-- 關於我們頁面：延續首頁樣式與結構 -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,16 +26,21 @@
       background-color: var(--bg-light);
       color: var(--text-dark);
     }
+
     .navbar {
       background-color: var(--navbar-bg);
     }
-    .navbar-brand, .navbar-nav .nav-link {
+
+    .navbar-brand,
+    .navbar-nav .nav-link {
       color: var(--navbar-text) !important;
       font-weight: 500;
     }
+
     .navbar-nav .nav-link:hover {
       color: var(--accent-color) !important;
     }
+
     footer {
       background-color: var(--navbar-bg);
       color: var(--navbar-text);
@@ -74,9 +80,17 @@
     box-shadow: 0 10px 22px rgba(16, 24, 40, 0.16);
   }
 
-  .social-fb { background: #1877F2; }
-  .social-ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
-  .social-line { background: #00C300; }
+  .social-fb {
+    background: #1877F2;
+  }
+
+  .social-ig {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  }
+
+  .social-line {
+    background: #00C300;
+  }
 
   @media (max-width: 767.98px) {
     .social-fixed {
@@ -92,16 +106,23 @@
       box-shadow: 0 -6px 18px rgba(16, 24, 40, 0.06);
     }
 
-    .social-fixed a { width: 44px; height: 44px; font-size: 18px; }
+    .social-fixed a {
+      width: 44px;
+      height: 44px;
+      font-size: 18px;
+    }
   }
 </style>
+
 <body class="d-flex flex-column min-vh-100">
   <!-- Navbar -->
   <?php include_once 'include/nav.php'; ?>
 
   <!-- Banner -->
   <section>
-    <img src="https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1200&h=400" alt="關於我們橫幅" class="w-100" style="height: 267px; object-fit: cover; filter: brightness(90%);">
+    <img
+      src="https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1200&h=400"
+      alt="關於我們橫幅" class="w-100" style="height: 267px; object-fit: cover; filter: brightness(90%);">
   </section>
 
   <!-- Main Content -->
@@ -140,24 +161,20 @@
       <div class="row justify-content-center">
         <div class="col-md-6 text-center">
           <h2 class="mb-3" style="color: var(--primary-color);">聯絡我們</h2>
-          <p class="mb-2"><i class="fas fa-envelope me-2"></i>contact@spacebooking.com</p>
-          <p><i class="fas fa-phone me-2"></i>(02) 1234-5678</p>
+          <p class="mb-2"><i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars($setting->email); ?></p>
+          <p><i class="fas fa-phone me-2"></i><?php echo htmlspecialchars($setting->phone); ?></p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-    <footer class="mt-auto text-center py-3">
-        <p class="mb-0">&copy; 2025 思辨空間 All rights reserved.</p>
-    </footer>
+  <footer class="mt-auto text-center py-3">
+    <p class="mb-0">&copy; 2025 思辨空間 All rights reserved.</p>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- 固定社群按鈕（FB / IG / 官方 LINE） -->
-  <div class="social-fixed" aria-hidden="false">
-    <a class="social-fb" href="#" aria-label="Facebook - 打開新分頁" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
-    <a class="social-ig" href="#" aria-label="Instagram - 打開新分頁" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-    <a class="social-line" href="#" aria-label="官方 LINE - 打開新分頁" target="_blank" rel="noopener noreferrer"><i class="fab fa-line"></i></a>
-  </div>
+  <?php include dirname(__FILE__) . '/include/third-party-link.php'; ?>
 </body>
+
 </html>

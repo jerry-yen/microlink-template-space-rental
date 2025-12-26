@@ -247,8 +247,8 @@
       <!-- 聯絡資訊 -->
       <div class="contact-box mb-5">
         <strong>如有任何問題，歡迎與我們聯絡！</strong>
-        <p><i class="fas fa-envelope me-2"></i><?php echo $setting->email; ?></p>
-        <p><i class="fas fa-phone me-2"></i><?php echo $setting->phone; ?></p>
+        <p><i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars($setting->email); ?></p>
+        <p><i class="fas fa-phone me-2"></i><?php echo htmlspecialchars($setting->phone); ?></p>
       </div>
 
     </div>
@@ -342,15 +342,7 @@
       calendar.render();
     });
   </script>
-  <!-- 固定社群按鈕（FB / IG / 官方 LINE） -->
-  <div class="social-fixed" aria-hidden="false">
-    <a class="social-fb" href="#" aria-label="Facebook - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
-        class="fab fa-facebook-f"></i></a>
-    <a class="social-ig" href="#" aria-label="Instagram - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
-        class="fab fa-instagram"></i></a>
-    <a class="social-line" href="#" aria-label="官方 LINE - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
-        class="fab fa-line"></i></a>
-  </div>
+  <?php include dirname(__FILE__) . '/include/third-party-link.php'; ?>
 </body>
 
 </html>

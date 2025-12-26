@@ -227,30 +227,26 @@
 
             <div class="card mb-4">
               <div class="card-body">
-                <h4 class="card-title">設備租借（常見項目）</h4>
+                <h4 class="card-title">設備租借</h4>
                 <div class="row g-3">
-                  <div class="col-md-6">
-                    <div class="card card-equip p-3">
-                      <h6 class="mb-1">投影機 + 布幕</h6>
-                      <p class="mb-1"><strong>租金：</strong>NT$500 / 台 / 小時</p>
-                      <p class="mb-0 text-muted">含基本線材與現場簡單協助。</p>
+                  <?php if (isset($equipments) && isset($equipments->data) && is_array($equipments->data)): ?>
+                    <?php foreach ($equipments->data as $item): ?>
+                      <div class="col-md-6">
+                        <div class="card card-equip p-3">
+                          <h6 class="mb-1"><?php echo htmlspecialchars($item->title); ?></h6>
+                          <p class="mb-1"><strong>租金：</strong>NT$<?php echo number_format($item->price); ?> /
+                            <?php echo htmlspecialchars($item->unit); ?>
+                          </p>
+                          <p class="mb-0 text-muted"><?php echo htmlspecialchars($item->description); ?></p>
+                        </div>
+                      </div>
+                    <?php endforeach; ?>
+                  <?php else: ?>
+                    <div class="col-12">
+                      <p class="text-muted">目前沒有相關設備資訊。</p>
                     </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="card card-equip p-3">
-                      <h6 class="mb-1">無線麥克風（含音響）</h6>
-                      <p class="mb-1"><strong>租金：</strong>NT$400 / 組 / 小時</p>
-                      <p class="mb-0 text-muted">適合演講、課程或座談。</p>
-                    </div>
-                  </div>
+                  <?php endif; ?>
                 </div>
-
-                <h5 class="mt-3">茶水與加值服務</h5>
-                <ul>
-                  <li>基本茶水（礦泉水、咖啡包）：NT$50 / 人（含無限供應至場次結束）</li>
-                  <li>簡餐或點心：依合作廠商報價（需提前 3 天預訂）</li>
-                  <li>專業錄影／直播支援：NT$1,500 起（含 1 人場務，實際報價依需求而定）</li>
-                </ul>
               </div>
             </div>
 
@@ -259,23 +255,29 @@
           <div class="col-lg-4">
             <div class="card mb-4">
               <div class="card-body">
-                <h5 class="card-title">儲值方案與優惠</h5>
-                <p class="text-muted">建議方案（示例），實際優惠以櫃台公告為主。</p>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item"><strong>儲值會員：</strong>單次儲值滿 NT$50,000，可享 8 折優惠</li>
-                  <li class="list-group-item"><strong>政府單位：</strong>可享 9 折（不得與儲值優惠同時使用）</li>
-                </ul>
-
-                <h6 class="mt-3">使用與退款規範</h6>
-                <p class="text-muted small">儲值金僅限本平台使用，退款將依合約與使用狀況處理，若需退款或異動請洽客服。</p>
+                <h5 class="card-title">使用規範</h5>
+                <?php if (isset($rentals) && isset($rentals->data) && is_array($rentals->data)): ?>
+                  <div class="vstack gap-3">
+                    <?php foreach ($rentals->data as $rental): ?>
+                      <div>
+                        <h6 class="fw-bold mb-1"><?php echo htmlspecialchars($rental->title); ?></h6>
+                        <div class="text-muted small">
+                          <?php echo $rental->content; ?>
+                        </div>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                <?php else: ?>
+                  <p class="text-muted small">詳細規範請洽管理人員。</p>
+                <?php endif; ?>
               </div>
             </div>
 
             <div class="card mb-4">
               <div class="card-body">
                 <h5 class="card-title">快速聯絡</h5>
-                <p class="mb-1"><i class="fas fa-phone me-2"></i>(02) 1234-5678</p>
-                <p class="mb-1"><i class="fas fa-envelope me-2"></i>service@spacehub.com</p>
+                <p class="mb-1"><i class="fas fa-phone me-2"></i><?php echo htmlspecialchars($setting->phone); ?></p>
+                <p class="mb-1"><i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars($setting->email); ?></p>
                 <a href="spaces.html" class="btn btn-outline-primary mt-2">回到空間清單</a>
               </div>
             </div>
@@ -292,15 +294,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- 固定社群按鈕（FB / IG / 官方 LINE） -->
-  <div class="social-fixed" aria-hidden="false">
-    <a class="social-fb" href="#" aria-label="Facebook - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
-        class="fab fa-facebook-f"></i></a>
-    <a class="social-ig" href="#" aria-label="Instagram - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
-        class="fab fa-instagram"></i></a>
-    <a class="social-line" href="#" aria-label="官方 LINE - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
-        class="fab fa-line"></i></a>
-  </div>
+  <?php include dirname(__FILE__) . '/include/third-party-link.php'; ?>
 </body>
 
 </html>
