@@ -218,20 +218,35 @@
 </head>
 
 <body>
+
     <!-- Navbar -->
     <?php include_once 'include/nav.php'; ?>
+
 
     <!-- Carousel -->
     <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="https://images.pexels.com/photos/1181395/pexels-photo-1181395.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1200&h=400"
-                    class="d-block w-100" alt="會議室橫幅1">
-            </div>
-            <div class="carousel-item">
-                <img src="https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1200&h=400"
-                    class="d-block w-100" alt="會議室橫幅2">
-            </div>
+            <?php
+            if (isset($banners) && isset($banners->data) && is_array($banners->data)):
+                $is_first = true;
+                foreach ($banners->data as $banner_item):
+                    $active_class = $is_first ? ' active' : '';
+                    $is_first = false;
+                    ?>
+                    <div class="carousel-item<?php echo $active_class; ?>">
+                        <?php if (!empty($banner_item->url)): ?>
+                            <a href="<?php echo htmlspecialchars($banner_item->url); ?>" target="_blank">
+                            <?php endif; ?>
+                            <img src="<?php echo $domain_url . htmlspecialchars($banner_item->banner); ?>" class="d-block w-100"
+                                alt="<?php echo htmlspecialchars($banner_item->title); ?>">
+                            <?php if (!empty($banner_item->url)): ?>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                    <?php
+                endforeach;
+            endif;
+            ?>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon"></span>
@@ -249,17 +264,11 @@
             <h2 class="mb-4 text-center">思辨空間簡介</h2>
             <div class="row align-items-center">
                 <div class="col-md-7">
-                    <p class="lead">思辨空間是為促進創意思考與跨領域對話所設計的共享場域。我們提供安靜且具設計感的討論區，適合讀書會、工作坊、學術座談與小型發表，讓思想在開放又專注的環境中被激盪。</p>
-                    <ul class="list-unstyled text-muted thinking-features">
-                        <li><i class="fas fa-check text-primary"></i> 彈性座位配置，支援小組討論與分組活動</li>
-                        <li><i class="fas fa-check text-primary"></i> 投影、白板與音響等會議設施完備</li>
-                        <li><i class="fas fa-check text-primary"></i> 提供茶水與網路，並定期清潔維護</li>
-                    </ul>
-                    <p class="mt-3">無論您是策劃讀書會、主持研討會或進行創作會議，思辨空間都能提供一個讓想法自由生長的中立場域。立即瀏覽空間清單並預約您理想的場地。</p>
+                    <div class="lead"><?php echo $setting->intro_desc; ?></div>
                 </div>
                 <div class="col-md-5 text-center">
-                    <img src="https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=800&h=600"
-                        alt="思辨空間示意圖" class="img-fluid thinking-img">
+                    <img src="<?php echo $domain_url . htmlspecialchars($setting->intro_image); ?>"
+                        alt="<?php echo htmlspecialchars($setting->title); ?>" class="img-fluid thinking-img">
                 </div>
             </div>
         </div>
@@ -269,22 +278,42 @@
         <div class="container text-center">
             <h2 class="mb-4">特色與優點</h2>
             <div class="row row-cols-2 row-cols-md-4 g-4 justify-content-center">
-                <div class="col"><button class="btn btn-outline-secondary w-100"><i
-                            class="fas fa-mug-hot fa-lg mb-1"></i><br>茶水間</button></div>
-                <div class="col"><button class="btn btn-outline-secondary w-100"><i
-                            class="fas fa-wifi fa-lg mb-1"></i><br>WiFi</button></div>
-                <div class="col"><button class="btn btn-outline-secondary w-100"><i
-                            class="fas fa-project-diagram fa-lg mb-1"></i><br>先進設備</button></div>
-                <div class="col"><button class="btn btn-outline-secondary w-100"><i
-                            class="fas fa-broom fa-lg mb-1"></i><br>定期清潔</button></div>
-                <div class="col"><button class="btn btn-outline-secondary w-100"><i
-                            class="fas fa-music fa-lg mb-1"></i><br>音響設備</button></div>
-                <div class="col"><button class="btn btn-outline-secondary w-100"><i
-                            class="fas fa-star fa-lg mb-1"></i><br>全新裝潢</button></div>
-                <div class="col"><button class="btn btn-outline-secondary w-100"><i
-                            class="fas fa-store fa-lg mb-1"></i><br>鄰近超商</button></div>
-                <div class="col"><button class="btn btn-outline-secondary w-100"><i
-                            class="fas fa-parking fa-lg mb-1"></i><br>停車便利</button></div>
+                <?php
+                if (isset($equipments) && isset($equipments->data) && is_array($equipments->data)):
+                    foreach ($equipments->data as $item):
+                        $icon_class = 'fa-star'; // Default icon
+                        $title = $item->title ?? '';
+
+                        // Simple keyword matching for icons
+                        if (mb_strpos($title, '投影') !== false)
+                            $icon_class = 'fa-project-diagram';
+                        elseif (mb_strpos($title, '麥克風') !== false)
+                            $icon_class = 'fa-microphone';
+                        elseif (mb_strpos($title, '音響') !== false)
+                            $icon_class = 'fa-music';
+                        elseif (mb_strpos($title, '茶水') !== false)
+                            $icon_class = 'fa-mug-hot';
+                        elseif (mb_strpos($title, 'WiFi') !== false || stripos($title, 'wifi') !== false)
+                            $icon_class = 'fa-wifi';
+                        elseif (mb_strpos($title, '清潔') !== false)
+                            $icon_class = 'fa-broom';
+                        elseif (mb_strpos($title, '停車') !== false)
+                            $icon_class = 'fa-parking';
+                        elseif (mb_strpos($title, '便利') !== false || mb_strpos($title, '商店') !== false)
+                            $icon_class = 'fa-store';
+                        elseif (mb_strpos($title, '裝潢') !== false)
+                            $icon_class = 'fa-paint-roller';
+                        ?>
+                        <div class="col">
+                            <button class="btn btn-outline-secondary w-100">
+                                <i class="fas <?php echo $icon_class; ?> fa-lg mb-1"></i><br>
+                                <?php echo htmlspecialchars($title); ?>
+                            </button>
+                        </div>
+                        <?php
+                    endforeach;
+                endif;
+                ?>
             </div>
         </div>
     </section>
@@ -292,97 +321,64 @@
     <section class="py-5">
         <div class="container">
             <h2 class="mb-4 text-center">精選空間照片</h2>
+            <!-- Removed debug print_r -->
             <div class="row">
-                <!-- 空間卡片1 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card space-card position-relative">
-                        <img src="https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&h=400"
-                            class="card-img-top" alt="會議室 A">
-                        <div class="card-body">
-                            <h5 class="card-title">會議室 A</h5>
-                            <p class="card-text">位於大樓 1F，提供白板與投影機</p>
-                            <p><i class="fas fa-users"></i> 可容納 10 人</p>
-                            <p><i class="fas fa-map-marker-alt"></i> 台北市中山區</p>
-                            <a href="space.html" class="btn btn-primary">查看更多</a>
+                <?php
+                $all_spaces = [];
+                if (isset($branches) && isset($branches->data) && is_array($branches->data)):
+                    foreach ($branches->data as $branch):
+                        if (isset($branch->spaces) && is_array($branch->spaces)):
+                            foreach ($branch->spaces as $space):
+                                // Attach branch title to space object for easier access later
+                                $space->branch_title = $branch->title ?? '';
+                                $all_spaces[] = $space;
+                            endforeach;
+                        endif;
+                    endforeach;
+                endif;
+
+                // Randomize and limit to 6
+                shuffle($all_spaces);
+                $display_spaces = array_slice($all_spaces, 0, 6);
+
+                foreach ($display_spaces as $space):
+                    // Prepare data
+                    $space_img = !empty($space->images) ? $domain_url . $space->images : 'https://placehold.co/600x400?text=No+Image';
+                    $space_title = htmlspecialchars($space->title ?? '');
+                    $space_desc = htmlspecialchars($space->description ?? '');
+                    // Truncate description if too long
+                    if (mb_strlen($space_desc) > 50)
+                        $space_desc = mb_substr($space_desc, 0, 50) . '...';
+
+                    $capacity = htmlspecialchars($space->capacity ?? 'N/A');
+                    $location = htmlspecialchars($space->branch_title ?? '');
+
+                    // Construct Link
+                    $space_id_full = $space->id ?? '';
+                    $space_id_short = explode('-', $space_id_full)[0];
+                    $platform = 'unknown'; // Fallback
+                    if (!empty($space->branch_title)) {
+                        $platform = $space->branch_title;
+                    }
+                    $link_url = 'space.html/' . $space_id_short . '/' . $platform . '/' . $space_title;
+                    ?>
+                    <div class="col-md-4 mb-4">
+                        <div class="card space-card position-relative">
+                            <img src="<?php echo $space_img; ?>" class="card-img-top" alt="<?php echo $space_title; ?>">
+                            <div class="card-body">
+                                <h5 class="card-title"><?php echo $space_title; ?></h5>
+                                <p class="card-text"><?php echo $space_desc; ?></p>
+                                <p><i class="fas fa-users"></i> 可容納 <?php echo $capacity; ?> 人</p>
+                                <p><i class="fas fa-map-marker-alt"></i> <?php echo $location; ?></p>
+                                <a href="<?php echo $link_url; ?>" class="btn btn-primary">查看更多</a>
+                            </div>
+                            <a href="<?php echo $link_url; ?>" class="stretched-link"
+                                aria-label="查看 <?php echo $space_title; ?> 詳情"></a>
                         </div>
-                        <a href="space.html" class="stretched-link" aria-label="查看 會議室 A 詳情"></a>
                     </div>
-                </div>
-                <!-- 空間卡片2 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card space-card position-relative">
-                        <img src="https://images.pexels.com/photos/260689/pexels-photo-260689.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&h=400"
-                            class="card-img-top" alt="會議室 B">
-                        <div class="card-body">
-                            <h5 class="card-title">會議室 B</h5>
-                            <p class="card-text">附設投影布幕，適合小型簡報</p>
-                            <p><i class="fas fa-users"></i> 可容納 8 人</p>
-                            <p><i class="fas fa-map-marker-alt"></i> 台北市信義區</p>
-                            <a href="space.html" class="btn btn-primary">查看更多</a>
-                        </div>
-                        <a href="space.html" class="stretched-link" aria-label="查看 會議室 B 詳情"></a>
-                    </div>
-                </div>
-                <!-- 空間卡片3 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card space-card position-relative">
-                        <img src="https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&h=400"
-                            class="card-img-top" alt="會議室 C">
-                        <div class="card-body">
-                            <h5 class="card-title">會議室 C</h5>
-                            <p class="card-text">設有音響與錄影設備，適合線上會議</p>
-                            <p><i class="fas fa-users"></i> 可容納 12 人</p>
-                            <p><i class="fas fa-map-marker-alt"></i> 台中市西區</p>
-                            <a href="space.html" class="btn btn-primary">查看更多</a>
-                        </div>
-                        <a href="space.html" class="stretched-link" aria-label="查看 會議室 C 詳情"></a>
-                    </div>
-                </div>
-                <!-- 空間卡片4 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card space-card position-relative">
-                        <img src="https://images.pexels.com/photos/325229/pexels-photo-325229.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&h=400"
-                            class="card-img-top" alt="會議室 D">
-                        <div class="card-body">
-                            <h5 class="card-title">會議室 D</h5>
-                            <p class="card-text">落地窗景觀設計，採光佳</p>
-                            <p><i class="fas fa-users"></i> 可容納 6 人</p>
-                            <p><i class="fas fa-map-marker-alt"></i> 新竹市東區</p>
-                            <a href="space.html" class="btn btn-primary">查看更多</a>
-                        </div>
-                        <a href="space.html" class="stretched-link" aria-label="查看 會議室 D 詳情"></a>
-                    </div>
-                </div>
-                <!-- 空間卡片5 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card space-card position-relative">
-                        <img src="https://images.pexels.com/photos/1181398/pexels-photo-1181398.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&h=400"
-                            class="card-img-top" alt="會議室 E">
-                        <div class="card-body">
-                            <h5 class="card-title">會議室 E</h5>
-                            <p class="card-text">獨立包廂，適合一對一洽談</p>
-                            <p><i class="fas fa-users"></i> 可容納 4 人</p>
-                            <p><i class="fas fa-map-marker-alt"></i> 台南市中西區</p>
-                            <a href="space.html" class="btn btn-primary">查看更多</a>
-                        </div>
-                        <a href="space.html" class="stretched-link" aria-label="查看 會議室 E 詳情"></a>
-                    </div>
-                </div>
-                <!-- 空間卡片6 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card space-card position-relative">
-                        <img src="https://images.pexels.com/photos/267507/pexels-photo-267507.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=600&h=400"
-                            class="card-img-top" alt="會議室 F">
-                        <div class="card-body">
-                            <h5 class="card-title">會議室 F</h5>
-                            <p class="card-text">提供高速 Wi-Fi 與免費茶水</p>
-                            <p><i class="fas fa-users"></i> 可容納 14 人</p>
-                            <p><i class="fas fa-map-marker-alt"></i> 高雄市左營區</p>
-                            <a href="space.html" class="btn btn-primary">查看更多</a>
-                        </div>
-                        <a href="space.html" class="stretched-link" aria-label="查看 會議室 F 詳情"></a>
-                    </div>
-                </div>
+                    <?php
+                endforeach;
+                ?>
             </div>
         </div>
     </section>
@@ -402,9 +398,7 @@
 
 
     <!-- Footer -->
-    <footer class="text-center py-3">
-        <p class="mb-0">&copy; 2025 思辨空間 All rights reserved.</p>
-    </footer>
+    <?php include dirname(__FILE__) . '/include/footer.php'; ?>
 
     <!-- 固定社群按鈕（FB / IG / 官方 LINE） -->
     <?php include dirname(__FILE__) . '/include/third-party-link.php'; ?>

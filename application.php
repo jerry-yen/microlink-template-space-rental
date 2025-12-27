@@ -320,9 +320,7 @@
     </div>
   </section>
 
-  <footer class="mt-auto text-center py-3">
-    <p class="mb-0">&copy; 2025 思辨空間 All rights reserved.</p>
-  </footer>
+  <?php include dirname(__FILE__) . '/include/footer.php'; ?>
 
   <?php include dirname(__FILE__) . '/include/third-party-link.php'; ?>
 

@@ -289,9 +289,7 @@
     </section>
   </main>
 
-  <footer class="mt-auto text-center py-3">
-    <p class="mb-0">&copy; 2025 空間租借平台 All rights reserved.</p>
-  </footer>
+  <?php include dirname(__FILE__) . '/include/footer.php'; ?>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <?php include dirname(__FILE__) . '/include/third-party-link.php'; ?>
