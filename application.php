@@ -129,194 +129,195 @@
                   <input type="date" class="form-control" name="rental_date" required>
                   <div class="invalid-feedback">請選擇租借日期。</div>
                 </div>
-                <div class="col-md-6">
-                  <label class="form-label">10. 欲租借空間 <span class="text-danger">*</span></label>
-                  <select class="form-select" name="space_choice" required>
-                    <option value="">請選擇欲租借空間</option>
-                    <?php foreach ($spaces->data as $space): ?>
+                <label class="form-label">10. 欲租借空間 <span class="text-danger">*</span></label>
+                <select class="form-select" name="space_choice" required>
+                  <option value="">請選擇欲租借空間</option>
+                  <?php foreach ($spaces->data as $branch): ?>
+                    <?php foreach ($branch->spaces as $space): ?>
                       <option category="<?php echo $space->category; ?>" value="<?php echo $space->id; ?>">
-                        <?php echo $space->title; ?>
+                        <?php echo $branch->title; ?> - <?php echo $space->title; ?>
                       </option>
                     <?php endforeach; ?>
-                  </select>
-                  <div class="invalid-feedback">請選擇欲租借的空間。</div>
-                </div>
+                  <?php endforeach; ?>
+                </select>
+                <div class="invalid-feedback">請選擇欲租借的空間。</div>
+              </div>
 
-                <!-- 11-18 特定空間專屬欄位 -->
-                <div id="conference_options" class="col-12" style="display: none;">
-                  <div class="row g-3 p-z3">
+              <!-- 11-18 特定空間專屬欄位 -->
+              <div id="conference_options" class="col-12" style="display: none;">
+                <div class="row g-3 p-z3">
 
-                    <div class="col-12" id="q11_group_a">
-                      <label class="form-label">11. 租借時間（多功能教室、會議室、團體室）<span class="text-danger">*</span></label>
-                      <div class="form-check">
-                        <input class="form-check-input conversation-field" type="checkbox" name="rental_time_slots[]"
-                          value="上午 08:30-12:30" id="time_morning">
-                        <label class="form-check-label" for="time_morning">上午 08:30-12:30</label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input conversation-field" type="checkbox" name="rental_time_slots[]"
-                          value="下午 13:00-17:00" id="time_afternoon">
-                        <label class="form-check-label" for="time_afternoon">下午 13:00-17:00</label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input conversation-field" type="checkbox" name="rental_time_slots[]"
-                          value="晚上 17:30-21:30" id="time_evening">
-                        <label class="form-check-label" for="time_evening">晚上 17:30-21:30</label>
-                      </div>
-                      <div class="invalid-feedback">請至少選擇一個租借時段。</div>
-                    </div>
-
-                    <div class="col-12" id="q11_group_b" style="display: none;">
-                      <label class="form-label">11. 租借時數，請以小時為單位 （9:00-12:00，共3小時）<span
-                          class="text-danger">*</span></label>
-                      <input type="text" class="form-control conversation-field" name="rental_duration"
-                        placeholder="輸入您的答案">
-                      <div class="invalid-feedback">請填寫租借時數。</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-12">
-                  <label class="form-label">12. 租借事由</label>
-                  <input type="text" class="form-control conversation-field" name="rental_reason">
-                </div>
-
-                <div class="col-md-6">
-                  <label class="form-label">13. 預計使用人數</label>
-                  <input type="number" class="form-control conversation-field" name="rental_people_count" min="1">
-                </div>
-
-                <div class="col-md-6">
-                  <label class="form-label">14. 是否需要代訂餐點</label>
-                  <div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input conversation-field" type="radio" name="need_catering" value="是"
-                        id="catering_yes">
-                      <label class="form-check-label" for="catering_yes">是</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input conversation-field" type="radio" name="need_catering" value="否"
-                        id="catering_no">
-                      <label class="form-check-label" for="catering_no">否</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <label class="form-label">15. 租借公司類型</label>
-                  <div>
+                  <div class="col-12" id="q11_group_a">
+                    <label class="form-label">11. 租借時間（多功能教室、會議室、團體室）<span class="text-danger">*</span></label>
                     <div class="form-check">
-                      <input class="form-check-input conversation-field" type="radio" name="company_type" value="縣市政府單位"
-                        id="type_gov">
-                      <label class="form-check-label" for="type_gov">縣市政府單位</label>
+                      <input class="form-check-input conversation-field" type="checkbox" name="rental_time_slots[]"
+                        value="上午 08:30-12:30" id="time_morning">
+                      <label class="form-check-label" for="time_morning">上午 08:30-12:30</label>
                     </div>
                     <div class="form-check">
-                      <input class="form-check-input conversation-field" type="radio" name="company_type"
-                        value="非縣市政府單位" id="type_nongov">
-                      <label class="form-check-label" for="type_nongov">非縣市政府單位</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <label class="form-label">16. 是否已加入思辨空間官方LINE</label>
-                  <div>
-                    <div class="form-check">
-                      <input class="form-check-input conversation-field" type="radio" name="line_joined" value="是！我已加入～"
-                        id="line_joined_yes">
-                      <label class="form-check-label" for="line_joined_yes">是！我已加入～</label>
+                      <input class="form-check-input conversation-field" type="checkbox" name="rental_time_slots[]"
+                        value="下午 13:00-17:00" id="time_afternoon">
+                      <label class="form-check-label" for="time_afternoon">下午 13:00-17:00</label>
                     </div>
                     <div class="form-check">
-                      <input class="form-check-input conversation-field" type="radio" name="line_joined" value="尚未"
-                        id="line_joined_no">
-                      <label class="form-check-label" for="line_joined_no">尚未</label>
+                      <input class="form-check-input conversation-field" type="checkbox" name="rental_time_slots[]"
+                        value="晚上 17:30-21:30" id="time_evening">
+                      <label class="form-check-label" for="time_evening">晚上 17:30-21:30</label>
                     </div>
+                    <div class="invalid-feedback">請至少選擇一個租借時段。</div>
                   </div>
-                </div>
 
-                <div class="col-12">
-                  <label class="form-label">17. 請問是如何得知思辨空間的呢？</label>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-check">
-                        <input class="form-check-input conversation-field" type="radio" name="source_of_info"
-                          value="FB臉書社團" id="source_fb">
-                        <label class="form-check-label" for="source_fb">FB臉書社團</label>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-check">
-                        <input class="form-check-input conversation-field" type="radio" name="source_of_info" value="IG"
-                          id="source_ig">
-                        <label class="form-check-label" for="source_ig">IG</label>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-check">
-                        <input class="form-check-input conversation-field" type="radio" name="source_of_info"
-                          value="GOOGLE搜尋" id="source_google">
-                        <label class="form-check-label" for="source_google">GOOGLE搜尋</label>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-check">
-                        <input class="form-check-input conversation-field" type="radio" name="source_of_info"
-                          value="親友介紹" id="source_friend">
-                        <label class="form-check-label" for="source_friend">親友介紹</label>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-check">
-                        <input class="form-check-input conversation-field" type="radio" name="source_of_info"
-                          value="曾經租借過" id="source_returned">
-                        <label class="form-check-label" for="source_returned">曾經租借過</label>
-                      </div>
-                    </div>
-                    <div class="col-md-12 mt-2">
-                      <div class="input-group">
-                        <div class="input-group-text">
-                          <input class="form-check-input mt-0 conversation-field" type="radio" name="source_of_info"
-                            value="其他" id="source_other">
-                          <label class="form-check-label ms-2" for="source_other">其他</label>
-                        </div>
-                        <input type="text" class="form-control conversation-field" name="source_of_info_other"
-                          placeholder="請說明..." aria-label="其他來源說明">
-                      </div>
-                    </div>
+                  <div class="col-12" id="q11_group_b" style="display: none;">
+                    <label class="form-label">11. 租借時數，請以小時為單位 （9:00-12:00，共3小時）<span
+                        class="text-danger">*</span></label>
+                    <input type="text" class="form-control conversation-field" name="rental_duration"
+                      placeholder="輸入您的答案">
+                    <div class="invalid-feedback">請填寫租借時數。</div>
                   </div>
-                </div>
-
-                <div class="col-12">
-                  <label class="form-label">18. 其他備註</label>
-                  <input type="text" class="form-control conversation-field" name="other_notes_18"
-                    placeholder="若有其他特殊需求請填寫">
-                </div>
-
-
-                <div class="col-12">
-                  <label class="form-label">備註（活動用途 / 參與人數 / 其他需求）</label>
-                  <textarea class="form-control" name="notes" rows="3" placeholder="選填：可註明活動用途、預估人數、設備需求等"></textarea>
-                </div>
-
-                <div class="col-12">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="agree" id="agreeCheck" required>
-                    <label class="form-check-label" for="agreeCheck">我已閱讀並同意資料提供與使用規範（必填）</label>
-                    <div class="invalid-feedback">請勾選同意才能提交表單。</div>
-                  </div>
-                </div>
-
-                <div class="col-12 text-end mt-4">
-                  <button type="submit" class="btn btn-primary">提交申請</button>
                 </div>
               </div>
-            </form>
 
-            <div id="submitResult" class="alert mt-5" style="display:none;margin-top: 20px;"></div>
+              <div class="col-12">
+                <label class="form-label">12. 租借事由</label>
+                <input type="text" class="form-control conversation-field" name="rental_reason">
+              </div>
 
+              <div class="col-md-6">
+                <label class="form-label">13. 預計使用人數</label>
+                <input type="number" class="form-control conversation-field" name="rental_people_count" min="1">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">14. 是否需要代訂餐點</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input conversation-field" type="radio" name="need_catering" value="是"
+                      id="catering_yes">
+                    <label class="form-check-label" for="catering_yes">是</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input conversation-field" type="radio" name="need_catering" value="否"
+                      id="catering_no">
+                    <label class="form-check-label" for="catering_no">否</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">15. 租借公司類型</label>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input conversation-field" type="radio" name="company_type" value="縣市政府單位"
+                      id="type_gov">
+                    <label class="form-check-label" for="type_gov">縣市政府單位</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input conversation-field" type="radio" name="company_type"
+                      value="非縣市政府單位" id="type_nongov">
+                    <label class="form-check-label" for="type_nongov">非縣市政府單位</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">16. 是否已加入思辨空間官方LINE</label>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input conversation-field" type="radio" name="line_joined" value="是！我已加入～"
+                      id="line_joined_yes">
+                    <label class="form-check-label" for="line_joined_yes">是！我已加入～</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input conversation-field" type="radio" name="line_joined" value="尚未"
+                      id="line_joined_no">
+                    <label class="form-check-label" for="line_joined_no">尚未</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label">17. 請問是如何得知思辨空間的呢？</label>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-check">
+                      <input class="form-check-input conversation-field" type="radio" name="source_of_info"
+                        value="FB臉書社團" id="source_fb">
+                      <label class="form-check-label" for="source_fb">FB臉書社團</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-check">
+                      <input class="form-check-input conversation-field" type="radio" name="source_of_info" value="IG"
+                        id="source_ig">
+                      <label class="form-check-label" for="source_ig">IG</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-check">
+                      <input class="form-check-input conversation-field" type="radio" name="source_of_info"
+                        value="GOOGLE搜尋" id="source_google">
+                      <label class="form-check-label" for="source_google">GOOGLE搜尋</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-check">
+                      <input class="form-check-input conversation-field" type="radio" name="source_of_info"
+                        value="親友介紹" id="source_friend">
+                      <label class="form-check-label" for="source_friend">親友介紹</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-check">
+                      <input class="form-check-input conversation-field" type="radio" name="source_of_info"
+                        value="曾經租借過" id="source_returned">
+                      <label class="form-check-label" for="source_returned">曾經租借過</label>
+                    </div>
+                  </div>
+                  <div class="col-md-12 mt-2">
+                    <div class="input-group">
+                      <div class="input-group-text">
+                        <input class="form-check-input mt-0 conversation-field" type="radio" name="source_of_info"
+                          value="其他" id="source_other">
+                        <label class="form-check-label ms-2" for="source_other">其他</label>
+                      </div>
+                      <input type="text" class="form-control conversation-field" name="source_of_info_other"
+                        placeholder="請說明..." aria-label="其他來源說明">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label">18. 其他備註</label>
+                <input type="text" class="form-control conversation-field" name="other_notes_18"
+                  placeholder="若有其他特殊需求請填寫">
+              </div>
+
+
+              <div class="col-12">
+                <label class="form-label">備註（活動用途 / 參與人數 / 其他需求）</label>
+                <textarea class="form-control" name="notes" rows="3" placeholder="選填：可註明活動用途、預估人數、設備需求等"></textarea>
+              </div>
+
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="agree" id="agreeCheck" required>
+                  <label class="form-check-label" for="agreeCheck">我已閱讀並同意資料提供與使用規範（必填）</label>
+                  <div class="invalid-feedback">請勾選同意才能提交表單。</div>
+                </div>
+              </div>
+
+              <div class="col-12 text-end mt-4">
+                <button type="submit" class="btn btn-primary">提交申請</button>
+              </div>
           </div>
+          </form>
+
+          <div id="submitResult" class="alert mt-5" style="display:none;margin-top: 20px;"></div>
+
         </div>
       </div>
+    </div>
     </div>
   </section>
 
@@ -328,7 +329,7 @@
 
   <script>
     // Bootstrap 自訂驗證（表單提交前檢查）
-    (function () {
+    (function() {
       'use strict'
       const form = document.getElementById('applicationForm')
       const spaceChoice = document.querySelector('select[name="space_choice"]');
@@ -336,7 +337,7 @@
       const conferenceFields = document.querySelectorAll('.conversation-field');
 
       // 監聽空間選擇
-      spaceChoice.addEventListener('change', function () {
+      spaceChoice.addEventListener('change', function() {
         const selectedOption = this.options[this.selectedIndex];
         const category = selectedOption.getAttribute('category');
 
@@ -396,7 +397,7 @@
       const q11GroupA = document.getElementById('q11_group_a');
       const checkBoxesA = q11GroupA.querySelectorAll('input[type="checkbox"]');
       checkBoxesA.forEach(box => {
-        box.addEventListener('change', function () {
+        box.addEventListener('change', function() {
           const feedbackA = q11GroupA.querySelector('.invalid-feedback');
           if (q11GroupA.querySelectorAll('input[type="checkbox"]:checked').length > 0) {
             feedbackA.style.display = 'none';
@@ -425,7 +426,7 @@
         }
       }
 
-      form.addEventListener('submit', function (event) {
+      form.addEventListener('submit', function(event) {
         let isCustomValid = true;
 
         // Custom Validation for Checkboxes in Group A (Large Spaces)
@@ -452,7 +453,10 @@
 
           // 如果是 Group A 錯誤，捲動到該處
           if (!isCustomValid && q11GroupA.style.display !== 'none') {
-            q11GroupA.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            q11GroupA.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
           }
 
         } else {
@@ -469,9 +473,9 @@
           const formData = new FormData(form)
 
           fetch('/api/space/booking?_token_=1234567890', {
-            method: 'POST',
-            body: formData
-          })
+              method: 'POST',
+              body: formData
+            })
             .then(response => {
               if (response.ok) {
                 return response.json().catch(() => ({}))
@@ -493,7 +497,10 @@
               }
 
               // 捲動至訊息處
-              result.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              result.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+              })
             })
             .catch(error => {
               // 失敗
@@ -501,7 +508,10 @@
               result.style.display = 'block'
               result.className = 'alert alert-danger'
               result.innerText = '申請提交失敗，請檢查網路連線或稍後再試。'
-              result.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              result.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+              })
             })
             .finally(() => {
               submitBtn.disabled = false
